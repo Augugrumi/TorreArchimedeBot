@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+from __init__ import main
 """
 Module Docstring
 """
@@ -6,11 +7,6 @@ Module Docstring
 __author__ = "Augugrumi Team"
 __version__ = "0.1.0"
 __license__ = "GPL3"
-
-
-def main():
-    """ Main entry point of the app """
-    print("hello world")
 
 
 if __name__ == "__main__":
