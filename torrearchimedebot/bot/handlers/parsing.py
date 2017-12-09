@@ -84,5 +84,5 @@ class URLParser:
     def parseSchedule(self, room):
         return Scedule(room, self.parse(room))
 
-schedule = URLParser().parseSchedule('1A150')
-print(schedule)
+#schedule = URLParser().parseSchedule('1A150')
+#print(schedule)
