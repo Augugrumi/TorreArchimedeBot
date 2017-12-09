@@ -1,0 +1,7 @@
+bot-variables.env
+bot-variables.env.prod
+docker-compose.yml
+Dockerfile
+.gitignore
+LICENSE
+setup.py
