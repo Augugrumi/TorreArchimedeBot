@@ -4,12 +4,6 @@ import sys
 import json
 
 class Results:
-    timeStart = ''
-    timeEnd = ''
-    activity = ''
-    professor = ''
-    activityType = ''
-    
     def __init__(self, time = '', activity = '', professor = '', activityType = ''):
         if (time != '') :
             [timeStart, timeEnd] = time.split(' - ')
@@ -32,37 +26,63 @@ class Results:
                 self.professor == '' and
                 self.activity == '')
 
-url = 'http://wss.math.unipd.it/display/Pages/1A150.php'
-if (len(sys.argv) >= 2) :
-    url = sys.argv[1]
-f = requests.get(url)
+class Scedule:
+    def __init__(self, room, records):
+        self.room = room
+        self.schedule = {}
+        for res in records:
+            if (not res.isEmpty()):
+                l = [None] * 3
+                l[0] = res.activity
+                l[1] = res.professor
+                l[2] = res.activityType
+                time = res.timeStart + "-" + res.timeEnd
+                self.schedule[time] = l
 
-#print(f.text)
+    def getSchedule(self):
+        return self.schedule
 
-xpathToTableRows = '//html/body/table/tbody/tr'
-xpathToCellContent = './td/h2/text()'
-xpathToActivityType = './td/h3/text()'
-xpathIfNoLessons = "./td[@class='noevent']/text()"
-tree = html.fromstring(f.text)
-rows = tree.xpath(xpathToTableRows) #update your table XPath here
-records = []
-cells = ''
-for row in rows:
-    cells = [c for c in row.xpath(xpathIfNoLessons) if c.strip()]
-    if (len(cells) == 0) :
-        cells = [c for c in row.xpath(xpathToCellContent) if c.strip()]
-        cells += [c for c in row.xpath(xpathToActivityType) if c.strip()]
-        if (len(cells)<=0):
-            records.append(Results())
-            print(Results)
-        elif (len(cells)==3):
-            records.append(Results(cells[0], cells[1], cells[2]))
-            print(Results(cells[0], cells[1], cells[2]))
-        elif (len(cells)==4):
-            records.append(Results(cells[0], cells[1], cells[2], cells[3]))
-            print(Results(cells[0], cells[1], cells[2], cells[3]))
-    else :
-        records.append(Results())
+    def getRoom(self):
+        return self.room
 
-for r in records:
-    print(r)
+    def __str__(self):
+        return json.dumps(self, default=lambda o: o.__dict__, indent=4)
+
+class URLParser:
+    URL_BASE = 'http://wss.math.unipd.it/display/Pages/'
+    URL_EXT = '.php'
+    XPATH_TO_TABLE_ROWS = '//html/body/table/tbody/tr'
+    XPATH_TO_CELLS_CONTENT = './td/h2/text()'
+    XPATH_TO_ACTIVITY_TYPE = './td/h3/text()'
+    XPATH_IF_NO_LESSONS = "./td[@class='noevent']/text()"
+
+    def parse(self, room):
+        url = URLParser.URL_BASE + room + URLParser.URL_EXT
+        f = requests.get(url)
+        tree = html.fromstring(f.text)
+        rows = tree.xpath(URLParser.XPATH_TO_TABLE_ROWS)
+        records = []
+        cells = ''
+        for row in rows:
+            cells = [c for c in row.xpath(URLParser.XPATH_IF_NO_LESSONS) if c.strip()]
+            if (len(cells) == 0) :
+                cells = [c for c in row.xpath(URLParser.XPATH_TO_CELLS_CONTENT) if c.strip()]
+                cells += [c for c in row.xpath(URLParser.XPATH_TO_ACTIVITY_TYPE) if c.strip()]
+                if (len(cells)<=0):
+                    records.append(Results())
+                    print(Results)
+                elif (len(cells)==3):
+                    records.append(Results(cells[0], cells[1], cells[2]))
+                    print(Results(cells[0], cells[1], cells[2]))
+                elif (len(cells)==4):
+                    records.append(Results(cells[0], cells[1], cells[2], cells[3]))
+                    print(Results(cells[0], cells[1], cells[2], cells[3]))
+            else :
+                records.append(Results())
+        return records
+
+    def parseSchedule(self, room):
+        return Scedule(room, self.parse(room))
+
+schedule = URLParser().parseSchedule('1A150')
+print(schedule)
