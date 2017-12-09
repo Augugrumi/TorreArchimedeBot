@@ -3,7 +3,7 @@ from telegram.ext import CommandHandler
 from handlers.start_handler import StartHandler
 import os
 
-class TelegramView:
+class TelegramController:
 
     def __init__(self):
         self._updater = Updater(token=os.environ['TG_TOKEN'])
