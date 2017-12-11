@@ -1,6 +1,6 @@
 from .abs_handler import AbsHandler
 from .parsing import *
-import datetime
+from .utility import *
 
 class RoomHandler(AbsHandler):
 
@@ -28,7 +28,7 @@ def schedulePrettyfier(scheduleObj):
 
             #Start markdown text modifier
             if (time_in_range(time)):
-                toReturn += '*👉 '
+                toReturn += '* 👉 '
             elif (before_now(time)):
                 toReturn += '_'
 
@@ -39,35 +39,11 @@ def schedulePrettyfier(scheduleObj):
             
             #End markdown text modifier
             if (time_in_range(time)):
-                toReturn += ' 👈*'
+                toReturn += ' 👈 *'
             elif (before_now(time)):
                 toReturn += '_'
             
             toReturn += "\n" 
     return toReturn
 
-def time_in_range(interval):
-    """Return true if the interval include actual time"""
-    [start, end] = string_interval_to_time(interval)
-    now = datetime.datetime.now().time()
-    if start <= end:
-        return start <= now <= end
-    else:
-        return start <= now or now <= end
-
-def before_now(interval):
-    """Return true if the interval is ended before actual time"""
-    [start, end] = string_interval_to_time(interval)
-    now = datetime.datetime.now().time()
-    return now > end
-
-def string_interval_to_time(interval):
-    """Return 2 time retrieved from the string interval"""
-    [timeStart, timeEnd] = interval.split('-')
-    [startHour, startMin] = timeStart.split(':')
-    [endHour, endMin] = timeEnd.split(':')
-    start = datetime.time(int(startHour), int(startMin), 0)
-    end = datetime.time(int(endHour), int(endMin), 0)
-    return [start, end]
-
-#print(RoomHandler('1A150').handleMessage())
+#print(RoomHandler('1C150').handleMessage())
