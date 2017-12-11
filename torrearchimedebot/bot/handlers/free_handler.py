@@ -4,4 +4,4 @@ from .parsing import *
 class FreeHandler(AbsHandler):
 
     def handleMessage(self):
-        return "Rooms that now are free are:\n" + nowFree()
+        return "Rooms that now are free:\n" + nowFree()
