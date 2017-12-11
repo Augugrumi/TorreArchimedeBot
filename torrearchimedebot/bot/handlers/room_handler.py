@@ -28,7 +28,7 @@ def schedulePrettyfier(scheduleObj):
 
             #Start markdown text modifier
             if (time_in_range(time)):
-                toReturn += '*'
+                toReturn += '*> '
             elif (before_now(time)):
                 toReturn += '_'
 
@@ -39,7 +39,7 @@ def schedulePrettyfier(scheduleObj):
             
             #End markdown text modifier
             if (time_in_range(time)):
-                toReturn += '*'
+                toReturn += ' <*'
             elif (before_now(time)):
                 toReturn += '_'
             
