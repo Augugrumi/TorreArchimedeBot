@@ -41,4 +41,4 @@ class TelegramController:
 
     def roomSchedule(self, bot, update):
         handler = RoomHandler(update.message.text[1:])
-        bot.send_message(chat_id=update.message.chat_id, text=handler.handleMessage())
+        bot.send_message(parse_mode='Markdown', chat_id=update.message.chat_id, text=handler.handleMessage())
