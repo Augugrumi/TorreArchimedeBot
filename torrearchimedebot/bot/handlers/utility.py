@@ -1,5 +1,6 @@
 import datetime
 import pytz
+import os
 
 def time_in_range(interval):
     """Return true if the interval include actual time"""
@@ -23,3 +24,19 @@ def string_interval_to_time(interval):
     start = datetime.time(int(startHour), int(startMin), 0)
     end = datetime.time(int(endHour), int(endMin), 0)
     return [start, end]
+
+def retrieve_rooms():
+    rooms = [
+        '1A150',
+        '1AD100',
+        '1BC45',
+        '1BC50',
+        '1C150',
+        '1AD100',
+        '2AB40',
+        '2AB45',
+        '2BC30',
+        '2BC60',
+        'LabTA'
+        ]
+    return rooms

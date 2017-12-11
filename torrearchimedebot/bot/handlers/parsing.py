@@ -2,6 +2,7 @@ import requests
 from lxml import html
 import sys
 import json
+from .utility import *
 
 class Results:
     def __init__(self, time = '', activity = '', professor = '', activityType = ''):
@@ -45,6 +46,17 @@ class Scedule:
     def getRoom(self):
         return self.room
 
+    def now(self):
+        toReturn = ''
+        t = ''
+        for time in self.schedule:
+            if (time_in_range(time)):
+                toReturn = self.schedule[time]
+                t = time
+        if (toReturn != ''):
+            toReturn = [t] + toReturn
+        return toReturn
+
     def __str__(self):
         return json.dumps(self, default=lambda o: o.__dict__, indent=4)
 
@@ -84,5 +96,37 @@ class URLParser:
     def parseSchedule(self, room):
         return Scedule(room, self.parse(room))
 
-#schedule = URLParser().parseSchedule('1A150')
-#print(schedule)
+def nowSchedule():
+    parser = URLParser()
+    rooms = retrieve_rooms()
+    schedule = ''
+    roomActivities = ''
+    delimiter = '\t'
+    for room in rooms:
+        schedule = parser.parseSchedule(room)
+        roomSceduleNow = schedule.now()
+        roomActivities += '*' + room + '*' 
+        if (roomSceduleNow != ''):
+            for s in roomSceduleNow:
+                roomActivities += delimiter + s
+        else:
+            roomActivities += delimiter + "The room is now free"
+        roomActivities += '\n'
+    return roomActivities
+
+def nowFree():
+    parser = URLParser()
+    rooms = retrieve_rooms()
+    schedule = ''
+    roomActivities = ''
+    delimiter = '\t'
+    for room in rooms:
+        schedule = parser.parseSchedule(room)
+        roomSceduleNow = schedule.now()
+        if (roomSceduleNow == ''):
+            roomActivities += room
+            roomActivities += '\n'
+    if (roomActivities != ''):
+        return roomActivities
+    else:
+        return "No room is free"
