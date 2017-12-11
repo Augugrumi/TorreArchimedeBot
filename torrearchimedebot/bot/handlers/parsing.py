@@ -82,13 +82,13 @@ class URLParser:
                 cells += [c for c in row.xpath(URLParser.XPATH_TO_ACTIVITY_TYPE) if c.strip()]
                 if (len(cells)<=0):
                     records.append(Results())
-                    print(Results)
+                    #print(Results)
                 elif (len(cells)==3):
                     records.append(Results(cells[0], cells[1], cells[2]))
-                    print(Results(cells[0], cells[1], cells[2]))
+                    #print(Results(cells[0], cells[1], cells[2]))
                 elif (len(cells)==4):
                     records.append(Results(cells[0], cells[1], cells[2], cells[3]))
-                    print(Results(cells[0], cells[1], cells[2], cells[3]))
+                    #print(Results(cells[0], cells[1], cells[2], cells[3]))
             else :
                 records.append(Results())
         return records
