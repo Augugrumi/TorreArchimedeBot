@@ -1,7 +1,7 @@
 from .abs_handler import AbsHandler
 from .parsing import *
 
-class RoomHandler:
+class RoomHandler(AbsHandler):
 
     def __init__(self, roomId):
         self.roomId = roomId
@@ -15,7 +15,7 @@ def schedulePrettyfier(scheduleObj):
     if (not schedule):
         toReturn = "The room is always empty today!"
     else:
-        delimiter = "  "
+        delimiter = "\t"
         for time in schedule:
             activity = schedule[time]
             stop = 2
@@ -23,6 +23,6 @@ def schedulePrettyfier(scheduleObj):
                 stop = 1
             toReturn += time
             for i in range(0, stop):
-                toReturn = delimiter + activity[i]
+                toReturn += delimiter + activity[i]
             toReturn += "\n" 
     return toReturn
