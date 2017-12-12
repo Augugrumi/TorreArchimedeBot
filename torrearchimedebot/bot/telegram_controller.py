@@ -4,6 +4,7 @@ from bot.handlers.start_handler import StartHandler
 from bot.handlers.room_handler import RoomHandler
 from bot.handlers.now_handler import NowHandler
 from bot.handlers.free_handler import FreeHandler
+from bot.handlers.info_handler import InfoHandler
 from .handlers.utility import *
 import os
 
@@ -12,7 +13,7 @@ class TelegramController:
     def __init__(self):
         self._updater = Updater(token=os.environ['TG_TOKEN'])
         self._dispatcher = self._updater.dispatcher
-        
+
         # Start Handler
         startHandler = CommandHandler('start', self.start)
         self._dispatcher.add_handler(startHandler)
@@ -24,7 +25,11 @@ class TelegramController:
         #Free rooms Handler
         freeHandler = CommandHandler('free', self.free)
         self._dispatcher.add_handler(freeHandler)
-        
+
+        #Info handler
+        infoHandler = CommandHandler('info', self.info)
+        self._dispatcher.add_handler(infoHandler)
+
         # Room Handlers definitions
         rooms = retrieve_rooms()
         for room in rooms:
@@ -50,3 +55,7 @@ class TelegramController:
     def free(self, bot, update):
         handler = FreeHandler()
         bot.send_message(chat_id=update.message.chat_id, text=handler.handleMessage())
+
+    def info(self, bot, update):
+        handler = InfoHandler()
+        bot.send_message(parse_mode='Markdown', chat_id=update.message.chat_id, text=handler.handleMessage())
