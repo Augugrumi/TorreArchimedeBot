@@ -5,7 +5,7 @@ Module Docstring
 """
 
 __author__ = "Augugrumi Team"
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 __license__ = "GPL3"
 
 
