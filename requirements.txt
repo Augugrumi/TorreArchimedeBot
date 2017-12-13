@@ -1,5 +1,5 @@
 python-telegram-bot==8.1.1
-requests
-lxml
-datetime
-pytz
+requests==2.18.4
+lxml==4.1.1
+datetime==4.2
+pytz==2017.3
