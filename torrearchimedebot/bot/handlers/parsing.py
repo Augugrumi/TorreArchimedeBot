@@ -37,11 +37,10 @@ def  json2Schedule(jsonString):
         key = r
         r = r.replace("-", " - ")
         results.append(Results(r, schedule[key][0], schedule[key][1], schedule[key][2]))
-    return Scedule(data["room"], results)
+    return Schedule(data["room"], results)
 
 
-
-class Scedule:
+class Schedule:
     def __init__(self, room, records):
         self.room = room
         self.schedule = {}
@@ -108,7 +107,7 @@ class URLParser:
         return records
 
     def parseSchedule(self, room):
-        return Scedule(room, self.parse(room))
+        return Schedule(room, self.parse(room))
 
 def nowSchedule():
     parser = URLParser()
@@ -118,10 +117,10 @@ def nowSchedule():
     delimiter = '\t'
     for room in rooms:
         schedule = parser.parseSchedule(room)
-        roomSceduleNow = schedule.now()
+        roomScheduleNow = schedule.now()
         roomActivities += '*' + room + '*' 
-        if (roomSceduleNow != ''):
-            for s in roomSceduleNow:
+        if (roomScheduleNow != ''):
+            for s in roomScheduleNow:
                 roomActivities += delimiter + s
         else:
             roomActivities += delimiter + "The room is now free"
@@ -136,8 +135,8 @@ def nowFree():
     delimiter = '\t'
     for room in rooms:
         schedule = parser.parseSchedule(room)
-        roomSceduleNow = schedule.now()
-        if (roomSceduleNow == ''):
+        roomScheduleNow = schedule.now()
+        if (roomScheduleNow == ''):
             roomActivities += room
             roomActivities += '\n'
     if (roomActivities != ''):
