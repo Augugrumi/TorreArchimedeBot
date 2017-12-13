@@ -119,7 +119,13 @@ def nowSchedule():
         roomActivities += '*' + room + '*'
         if (roomScheduleNow != ''):
             for s in roomScheduleNow:
-                roomActivities += delimiter + s
+                toAdd = s
+                toAdd.replace('_', ' ') \
+                .replace('*', ' ') \
+                .replace('[', ' ') \
+                .replace(']', ' ') \
+                .replace('`', ' ')
+                roomActivities += delimiter + toAdd
         else:
             roomActivities += delimiter + "The room is now free"
         roomActivities += '\n'
