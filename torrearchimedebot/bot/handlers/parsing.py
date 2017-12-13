@@ -1,10 +1,11 @@
-import requests
 from lxml import html
+from .utility import *
+import requests
 import sys
 import json
-from .utility import *
 import time
 import threading
+import logging
 
 class Results:
     def __init__(self, time = '', activity = '', professor = '', activityType = ''):
@@ -18,7 +19,7 @@ class Results:
         self.activity = activity
         self.professor = professor
         self.activityType = activityType
-    
+
     def __str__(self):
         return json.dumps(self, default=lambda o: o.__dict__, indent=4)
 
@@ -31,7 +32,6 @@ class Results:
                 self.activity == '')
 
 def  json2Schedule(jsonString):
-    print(jsonString)
     data = json.loads(jsonString)
     schedule = data["schedule"]
     results = []
@@ -96,13 +96,10 @@ class URLParser:
                 cells += [c for c in row.xpath(URLParser.XPATH_TO_ACTIVITY_TYPE) if c.strip()]
                 if (len(cells)<=0):
                     records.append(Results())
-                    #print(Results)
                 elif (len(cells)==3):
                     records.append(Results(cells[0], cells[1], cells[2]))
-                    #print(Results(cells[0], cells[1], cells[2]))
                 elif (len(cells)==4):
                     records.append(Results(cells[0], cells[1], cells[2], cells[3]))
-                    #print(Results(cells[0], cells[1], cells[2], cells[3]))
             else :
                 records.append(Results())
         return records
@@ -118,7 +115,7 @@ def nowSchedule():
     for room in rooms:
         schedule = scheduleAccess.getScheduleForRoom(room)
         roomScheduleNow = schedule.now()
-        roomActivities += '*' + room + '*' 
+        roomActivities += '*' + room + '*'
         if (roomScheduleNow != ''):
             for s in roomScheduleNow:
                 roomActivities += delimiter + s
@@ -158,15 +155,13 @@ class ScheduleAccess:
 
 class ScheduleUpdater:
     def lookupFromServer():
+        logging.getLogger().info('Taking data from server')
         parser = URLParser()
         rooms = retrieve_rooms()
         schedule = ''
         for room in rooms:
             schedule = parser.parseSchedule(room)
             ScheduleAccess.allSchedules[room] = schedule
-        for s in ScheduleAccess.allSchedules:
-            print(s)
-            print(ScheduleAccess.allSchedules[s])
 
 def startUpdater():
     ScheduleUpdater.lookupFromServer()
