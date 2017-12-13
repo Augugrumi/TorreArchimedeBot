@@ -2,7 +2,7 @@ import requests
 from lxml import html
 import sys
 import json
-from utility import *
+from .utility import *
 import time
 import threading
 

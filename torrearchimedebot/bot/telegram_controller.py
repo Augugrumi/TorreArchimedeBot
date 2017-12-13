@@ -6,7 +6,7 @@ from bot.handlers.room_handler import RoomHandler
 from bot.handlers.now_handler import NowHandler
 from bot.handlers.free_handler import FreeHandler
 from bot.handlers.info_handler import InfoHandler
-from .handlers.utility import *
+from bot.handlers.utility import *
 import logging
 import os
 import bot.handlers.parsing
