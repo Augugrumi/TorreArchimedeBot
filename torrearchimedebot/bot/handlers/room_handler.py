@@ -50,5 +50,3 @@ def schedulePrettyfier(scheduleObj):
 
             toReturn += "\n"
     return toReturn
-
-#print(RoomHandler('1C150').handleMessage())
