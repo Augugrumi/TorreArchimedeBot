@@ -111,6 +111,7 @@ def nowSchedule():
     schedule = ''
     roomActivities = ''
     delimiter = '\t'
+    rooms = retrieve_rooms()
     scheduleAccess = ScheduleAccess()
     for room in rooms:
         schedule = scheduleAccess.getScheduleForRoom(room)
@@ -128,6 +129,7 @@ def nowFree():
     schedule = ''
     roomActivities = ''
     delimiter = '\t'
+    rooms = retrieve_rooms()
     scheduleAccess = ScheduleAccess()
     for room in rooms:
         schedule = scheduleAccess.getScheduleForRoom(room)
