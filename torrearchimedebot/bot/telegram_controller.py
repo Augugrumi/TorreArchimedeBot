@@ -7,9 +7,9 @@ from bot.handlers.now_handler import NowHandler
 from bot.handlers.free_handler import FreeHandler
 from bot.handlers.info_handler import InfoHandler
 from bot.handlers.utility import *
+from bot.handlers.parsing import startUpdater
 import logging
 import os
-import bot.handlers.parsing
 
 class TelegramController:
 
