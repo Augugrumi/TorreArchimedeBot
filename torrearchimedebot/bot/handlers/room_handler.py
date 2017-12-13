@@ -35,7 +35,12 @@ def schedulePrettyfier(scheduleObj):
             #Add all the data
             toReturn += time
             for i in range(0, stop):
-                toReturn += delimiter + activity[i]
+                toReturn += delimiter + activity[i] \
+                .replace('_', ' ') \
+                .replace('*', ' ') \
+                .replace('[', ' ') \
+                .replace(']', ' ') \
+                .replace('`', ' ')
 
             #End markdown text modifier
             if (time_in_range(time)):
