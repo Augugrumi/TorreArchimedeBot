@@ -1,5 +1,6 @@
 from telegram.ext import Updater
 from telegram.ext import CommandHandler
+from telegram import KeyboardButton, ReplyKeyboardMarkup
 from bot.handlers.start_handler import StartHandler
 from bot.handlers.room_handler import RoomHandler
 from bot.handlers.now_handler import NowHandler
@@ -41,8 +42,19 @@ class TelegramController:
         self._updater.start_polling()
 
     def start(self, bot, update):
+
+        rooms = retrieve_rooms()
+        keyboard = []
+
+        for r in rooms:
+            keyboard.append([KeyboardButton("/" + r)])
+
+        replyMarkup = ReplyKeyboardMarkup(keyboard)
+
         handler = StartHandler()
-        bot.send_message(chat_id=update.message.chat_id, text=handler.handleMessage())
+        bot.send_message(chat_id=update.message.chat_id,
+                         text=handler.handleMessage(),
+                         reply_markup=replyMarkup)
 
     def roomSchedule(self, bot, update):
         handler = RoomHandler(update.message.text[1:])
