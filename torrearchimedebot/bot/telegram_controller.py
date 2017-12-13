@@ -9,10 +9,13 @@ from bot.handlers.info_handler import InfoHandler
 from .handlers.utility import *
 import logging
 import os
+import bot.handlers.parsing
 
 class TelegramController:
 
     def __init__(self):
+        startUpdater()
+
         self._updater = Updater(token=os.environ['TG_TOKEN'])
         self._dispatcher = self._updater.dispatcher
 
