@@ -39,38 +39,38 @@ class TelegramController:
 
     def commonOperation(self, bot, update):
         logging.getLogger().info("Received message from " + \
-        update.message.chat_id + " with text: " + update.message.text)
+        str(update.message.chat_id) + " with text: " + update.message.text)
         bot.send_chat_action(chat_id=update.message.chat.id, action=telegram.ChatAction.TYPING)
 
     def receiveMessages(self):
         self._updater.start_polling()
 
     def start(self, bot, update):
-        commonOperation(bot, update)
+        self.commonOperation(bot, update)
         handler = StartHandler()
         bot.send_message(chat_id=update.message.chat_id, text=handler.handleMessage())
 
     def roomSchedule(self, bot, update):
-        commonOperation(bot, update)
+        self.commonOperation(bot, update)
         roomId = ""
         messageRoom = update.message.text[1:]
         for r in retrieve_rooms():
-            if r.upper() === messageRoom.upper():
+            if r.upper() == messageRoom.upper():
                 roomId = r
         handler = RoomHandler(r)
         bot.send_message(parse_mode='Markdown', chat_id=update.message.chat_id, text=handler.handleMessage())
 
     def now(self, bot, update):
-        commonOperation(bot, update)
+        self.commonOperation(bot, update)
         handler = NowHandler()
         bot.send_message(parse_mode='Markdown', chat_id=update.message.chat_id, text=handler.handleMessage())
 
     def free(self, bot, update):
-        commonOperation(bot, update)
+        self.commonOperation(bot, update)
         handler = FreeHandler()
         bot.send_message(chat_id=update.message.chat_id, text=handler.handleMessage())
 
     def info(self, bot, update):
-        commonOperation(bot, update)
+        self.commonOperation(bot, update)
         handler = InfoHandler()
         bot.send_message(parse_mode='Markdown', chat_id=update.message.chat_id, text=handler.handleMessage())
