@@ -58,7 +58,7 @@ class TelegramController:
         for r in retrieve_rooms():
             if r.upper() == messageRoom.upper():
                 roomId = r
-        handler = RoomHandler(r)
+        handler = RoomHandler(roomId)
         bot.send_message(parse_mode='Markdown', chat_id=update.message.chat_id, text=handler.handleMessage())
 
     def now(self, bot, update):
