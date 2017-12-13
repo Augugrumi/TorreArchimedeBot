@@ -7,13 +7,16 @@ from bot.handlers.room_handler import RoomHandler
 from bot.handlers.now_handler import NowHandler
 from bot.handlers.free_handler import FreeHandler
 from bot.handlers.info_handler import InfoHandler
-from .handlers.utility import *
+from bot.handlers.utility import *
+from bot.handlers.parsing import startUpdater
 import logging
 import os
 
 class TelegramController:
 
     def __init__(self):
+        startUpdater()
+
         self._updater = Updater(token=os.environ['TG_TOKEN'])
         self._dispatcher = self._updater.dispatcher
 

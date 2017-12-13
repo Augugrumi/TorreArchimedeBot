@@ -37,6 +37,11 @@ def retrieve_rooms():
         '2AB45',
         '2BC30',
         '2BC60',
-        'LabTA'
+        'LabTA',
+        'LabP036',
+        'LabP140',
+        'LuF1',
+        'LuM250',
+        'P200'
         ]
     return rooms
