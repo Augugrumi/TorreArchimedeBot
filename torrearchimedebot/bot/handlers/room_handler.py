@@ -8,7 +8,7 @@ class RoomHandler(AbsHandler):
         self.roomId = roomId
 
     def handleMessage(self):
-        return schedulePrettyfier(URLParser().parseSchedule(self.roomId))
+        return schedulePrettyfier(ScheduleAccess().getSchedule(self.roomId))
 
 def schedulePrettyfier(scheduleObj):
     """Take the activity and format it to be displayed in a message"""
