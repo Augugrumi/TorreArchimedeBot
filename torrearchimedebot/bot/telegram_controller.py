@@ -1,3 +1,4 @@
+from telegram import ChatAction
 from telegram.ext import Updater
 from telegram.ext import CommandHandler
 from bot.handlers.start_handler import StartHandler
@@ -40,7 +41,7 @@ class TelegramController:
     def commonOperation(self, bot, update):
         logging.getLogger().info("Received message from " + \
         str(update.message.chat_id) + " with text: " + update.message.text)
-        bot.send_chat_action(chat_id=update.message.chat.id, action=telegram.ChatAction.TYPING)
+        bot.send_chat_action(chat_id=update.message.chat.id, action=ChatAction.TYPING)
 
     def receiveMessages(self):
         self._updater.start_polling()
