@@ -8,7 +8,7 @@ class RoomHandler(AbsHandler):
         self.roomId = roomId
 
     def handleMessage(self):
-        return schedulePrettyfier(ScheduleAccess().getSchedule(self.roomId))
+        return schedulePrettyfier(ScheduleAccess().getScheduleForRoom(self.roomId))
 
 def schedulePrettyfier(scheduleObj):
     """Take the activity and format it to be displayed in a message"""
@@ -36,14 +36,14 @@ def schedulePrettyfier(scheduleObj):
             toReturn += time
             for i in range(0, stop):
                 toReturn += delimiter + activity[i]
-            
+
             #End markdown text modifier
             if (time_in_range(time)):
                 toReturn += ' 👈 *'
             elif (before_now(time)):
                 toReturn += '_'
-            
-            toReturn += "\n" 
+
+            toReturn += "\n"
     return toReturn
 
 #print(RoomHandler('1C150').handleMessage())

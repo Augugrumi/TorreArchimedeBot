@@ -111,8 +111,8 @@ def nowSchedule():
     schedule = ''
     roomActivities = ''
     delimiter = '\t'
-    rooms = retrieve_rooms()
     scheduleAccess = ScheduleAccess()
+    rooms = retrieve_rooms()
     for room in rooms:
         schedule = scheduleAccess.getScheduleForRoom(room)
         roomScheduleNow = schedule.now()
@@ -129,8 +129,8 @@ def nowFree():
     schedule = ''
     roomActivities = ''
     delimiter = '\t'
-    rooms = retrieve_rooms()
     scheduleAccess = ScheduleAccess()
+    rooms = retrieve_rooms()
     for room in rooms:
         schedule = scheduleAccess.getScheduleForRoom(room)
         roomScheduleNow = schedule.now()
@@ -150,10 +150,10 @@ class ScheduleAccess:
             ScheduleUpdater.lookupFromServer()
 
     def getSchedule(self):
-        return schedule
+        return ScheduleAccess.allSchedules
 
     def getScheduleForRoom(self, roomId):
-        return schedule[roomId]
+        return ScheduleAccess.allSchedules[roomId]
 
 class ScheduleUpdater:
     def lookupFromServer():
