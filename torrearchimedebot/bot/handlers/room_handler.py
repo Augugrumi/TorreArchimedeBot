@@ -18,7 +18,7 @@ def schedulePrettyfier(scheduleObj):
         toReturn = "The room is always empty today!"
     else:
         delimiter = "\t"
-        for time in schedule:
+        for time in sorted(schedule.iterkeys()):
 
             activity = schedule[time]
             #Check if it is present the activity type
