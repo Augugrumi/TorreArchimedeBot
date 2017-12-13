@@ -2,7 +2,7 @@ import requests
 from lxml import html
 import sys
 import json
-from .utility import *
+from utility import *
 
 class Results:
     def __init__(self, time = '', activity = '', professor = '', activityType = ''):
@@ -20,12 +20,26 @@ class Results:
     def __str__(self):
         return json.dumps(self, default=lambda o: o.__dict__, indent=4)
 
+
     def isEmpty(self):
         return (self.timeStart == '' and
                 self.timeEnd == '' and
                 self.activity == '' and
                 self.professor == '' and
                 self.activity == '')
+
+def  json2Schedule(jsonString):
+    print(jsonString)
+    data = json.loads(jsonString)
+    schedule = data["schedule"]
+    results = []
+    for r in schedule:
+        key = r
+        r = r.replace("-", " - ")
+        results.append(Results(r, schedule[key][0], schedule[key][1], schedule[key][2]))
+    return Scedule(data["room"], results)
+
+
 
 class Scedule:
     def __init__(self, room, records):
