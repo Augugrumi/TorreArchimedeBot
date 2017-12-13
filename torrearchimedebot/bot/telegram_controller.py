@@ -1,3 +1,4 @@
+from telegram import ChatAction
 from telegram.ext import Updater
 from telegram.ext import CommandHandler
 from bot.handlers.start_handler import StartHandler
@@ -6,6 +7,7 @@ from bot.handlers.now_handler import NowHandler
 from bot.handlers.free_handler import FreeHandler
 from bot.handlers.info_handler import InfoHandler
 from .handlers.utility import *
+import logging
 import os
 
 class TelegramController:
@@ -36,26 +38,40 @@ class TelegramController:
             handler = CommandHandler(room, self.roomSchedule)
             self._dispatcher.add_handler(handler)
 
+    def commonOperation(self, bot, update):
+        logging.getLogger().info("Received message from " + \
+        str(update.message.chat_id) + " with text: " + update.message.text)
+        bot.send_chat_action(chat_id=update.message.chat.id, action=ChatAction.TYPING)
 
     def receiveMessages(self):
         self._updater.start_polling()
 
     def start(self, bot, update):
+        self.commonOperation(bot, update)
         handler = StartHandler()
         bot.send_message(chat_id=update.message.chat_id, text=handler.handleMessage())
 
     def roomSchedule(self, bot, update):
-        handler = RoomHandler(update.message.text[1:])
+        self.commonOperation(bot, update)
+        roomId = ""
+        messageRoom = update.message.text[1:]
+        for r in retrieve_rooms():
+            if r.upper() == messageRoom.upper():
+                roomId = r
+        handler = RoomHandler(r)
         bot.send_message(parse_mode='Markdown', chat_id=update.message.chat_id, text=handler.handleMessage())
 
     def now(self, bot, update):
+        self.commonOperation(bot, update)
         handler = NowHandler()
         bot.send_message(parse_mode='Markdown', chat_id=update.message.chat_id, text=handler.handleMessage())
 
     def free(self, bot, update):
+        self.commonOperation(bot, update)
         handler = FreeHandler()
         bot.send_message(chat_id=update.message.chat_id, text=handler.handleMessage())
 
     def info(self, bot, update):
+        self.commonOperation(bot, update)
         handler = InfoHandler()
         bot.send_message(parse_mode='Markdown', chat_id=update.message.chat_id, text=handler.handleMessage())
