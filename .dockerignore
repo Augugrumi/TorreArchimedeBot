@@ -1,9 +1,14 @@
 bot-variables.env
 bot-variables.env.prod
 docker-compose.yml
+docker-compose.yml.prod
 Dockerfile
 .gitignore
+.travis.yml
 LICENSE
 setup.py
-tools/
 ci_key.enc
+CODE_OF_CONDUCT.md
+CONTRIBUTING.md
+tools/
+.git/
