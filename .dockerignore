@@ -6,3 +6,4 @@ Dockerfile
 LICENSE
 setup.py
 tools/
+ci_key.enc
