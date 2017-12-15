@@ -1,6 +1,6 @@
 from bot.telegram_controller import TelegramController
 import logging
-from starterbot import SlackController
+from slack_controller import SlackController
 from multiprocessing import Process
 def main():
     """ Main entry point of the app """

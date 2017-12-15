@@ -55,11 +55,11 @@ class SlackController:
 
         # Finds and executes the given command, filling in response
         response = None
-        # This is where you start to implement more commands!
+        handler = None
         if command.startswith(SlackController.NOW_COMMAND):
-            response = nowSchedule()
+            handler = NowHandler()
         elif command.startswith(SlackController.FREE_COMMAND):
-            response = "Rooms that now are free:\n" + nowFree()
+            handler = FreeHandler()
         else:
             roomId = ''
             messageRoom = command.split(' ')[0]
@@ -67,7 +67,7 @@ class SlackController:
                 if r.upper() == messageRoom.upper():
                     roomId = r
             handler = RoomHandler(roomId)
-            response = handler.handleMessage()
+        response = handler.handleMessage()
 
         # Sends the response back to the channel
         SlackController.slack_client.api_call(
