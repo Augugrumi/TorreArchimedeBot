@@ -5,7 +5,7 @@ with open("README.md", 'r') as f:
 
 setup(
    name='torrearchimedebot',
-   version='0.1.3',
+   version='0.2.0',
    description='A useful bot for Torre Archimede schedule',
    license="GPL3",
    long_description=long_description,
