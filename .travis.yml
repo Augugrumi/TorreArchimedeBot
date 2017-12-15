@@ -15,7 +15,7 @@ script:
 
 deploy:
   provider: script
-  script: tools/release/upgradeTo.sh $TRAVIS_TAG
+  script: tools/release/upgradeTo.sh $TRAVIS_TAG &>/dev/null
   on:
     repo: Augugrumi/TorreArchimedeBot
     tags: true
