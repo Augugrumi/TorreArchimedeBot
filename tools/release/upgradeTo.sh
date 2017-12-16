@@ -4,7 +4,9 @@ set -e
 
 echo "TorreArchimedeBot upgrading tool"
 echo "Running in `pwd`"
-echo "Listing tools/release"
-ls -l tools/release
+echo "Fixing permissions"
+chmod 600 tools/release/ci_key
+echo "Running ssh"
 ssh -i tools/release/ci_key -oStrictHostKeyChecking=no $USER_TO_SSH@$ADDRESS_TO_SSH "$1"
 echo "Update scheduled"
+rm tools/release/ci_key
