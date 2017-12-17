@@ -95,25 +95,22 @@ class URLParser:
         for row in rows:
             cells = [c for c in row.xpath(
                 URLParser.XPATH_IF_NO_LESSONS) if c.strip()]
+            res = Results()
             if (len(cells) == 0):
                 cells = [c for c in row.xpath(
                     URLParser.XPATH_TO_CELLS_CONTENT) if c.strip()]
                 cells += [c for c in row.xpath(
                     URLParser.XPATH_TO_ACTIVITY_TYPE) if c.strip()]
-                if (len(cells) <= 0):
-                    records.append(Results())
-                else:
+                if (len(cells) > 0):
                     time = html.unescape(cells[0])
                     activity = html.unescape(cells[1])
                     professor = html.unescape(cells[2])
                     if (len(cells) == 3):
-                        records.append(Results(time, activity, professor))
+                        res = Results(time, activity, professor)
                     elif (len(cells) == 4):
                         activityType = html.unescape(cells[3])
-                        records.append(
-                            Results(time, activity, professor, activityType))
-            else:
-                records.append(Results())
+                        res = Results(time, activity, professor, activityType)
+            records.append(res)
         return records
 
     def parseSchedule(self, room):
