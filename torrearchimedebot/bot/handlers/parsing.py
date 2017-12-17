@@ -1,11 +1,11 @@
 import requests
 import json
-from lxml import html
+import html
+from lxml import html as htmllxml
 from .utility import *
 import logging
 import threading
 import pytz
-import html
 
 
 class Results:
@@ -50,7 +50,6 @@ class Schedule:
         self.schedule = {}
         for res in records:
             if (not res.isEmpty()):
-                l = [None] * 3
                 l[0] = res.activity
                 l[1] = res.professor
                 l[2] = res.activityType
@@ -89,7 +88,7 @@ class URLParser:
     def parse(self, room):
         url = URLParser.URL_BASE + room + URLParser.URL_EXT
         f = requests.get(url)
-        tree = html.fromstring(f.text)
+        tree = htmllxml.fromstring(f.text)
         rows = tree.xpath(URLParser.XPATH_TO_TABLE_ROWS)
         records = []
         cells = ''
@@ -103,11 +102,16 @@ class URLParser:
                     URLParser.XPATH_TO_ACTIVITY_TYPE) if c.strip()]
                 if (len(cells) <= 0):
                     records.append(Results())
-                elif (len(cells) == 3):
-                    records.append(Results(cells[0], cells[1], cells[2]))
-                elif (len(cells) == 4):
-                    records.append(
-                        Results(cells[0], cells[1], cells[2], cells[3]))
+                else:
+                    time = html.unescape(cells[0])
+                    activity = html.unescape(cells[1])
+                    professor = html.unescape(cells[2])
+                    if (len(cells) == 3):
+                        records.append(Results(time, activity, professor))
+                    elif (len(cells) == 4):
+                        activityType = html.unescape(cells[3])
+                        records.append(
+                            Results(time, activity, professor, activityType))
             else:
                 records.append(Results())
         return records
