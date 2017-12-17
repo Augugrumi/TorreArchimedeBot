@@ -7,6 +7,7 @@ from bot.handlers.room_handler import RoomHandler
 from bot.handlers.now_handler import NowHandler
 from bot.handlers.free_handler import FreeHandler
 from bot.handlers.info_handler import InfoHandler
+from bot.handlers.room_location_handler import RoomLocationHandler
 from bot.handlers.utility import *
 from bot.handlers.parsing import startUpdater
 import logging
@@ -24,17 +25,21 @@ class TelegramController:
         startHandler = CommandHandler('start', self.start)
         self._dispatcher.add_handler(startHandler)
 
-        #Now Handler
+        # Now Handler
         nowHandler = CommandHandler('now', self.now)
         self._dispatcher.add_handler(nowHandler)
 
-        #Free rooms Handler
+        # Free rooms Handler
         freeHandler = CommandHandler('free', self.free)
         self._dispatcher.add_handler(freeHandler)
 
-        #Info handler
+        # Info Handler
         infoHandler = CommandHandler('info', self.info)
         self._dispatcher.add_handler(infoHandler)
+
+        # Room Location Handler
+        rLocationHandler = CommandHandler('location', self.location)
+        self._dispatcher.add_handler(rLocationHandler)
 
         # Room Handlers definitions
         rooms = retrieve_rooms()
@@ -52,7 +57,7 @@ class TelegramController:
 
     def start(self, bot, update):
         self.commonOperation(bot, update)
-        
+
         rooms = retrieve_rooms()
         keyboard = []
         for r in rooms:
@@ -64,14 +69,17 @@ class TelegramController:
                          text=handler.handleMessage(),
                          reply_markup=replyMarkup)
 
-    def roomSchedule(self, bot, update):
-        self.commonOperation(bot, update)
+    def _retrieveClosestRoom(messageRoom):
         roomId = ""
         messageRoom = update.message.text[1:]
         for r in retrieve_rooms():
             if r.upper() == messageRoom.upper():
                 roomId = r
-        handler = RoomHandler(roomId)
+        return roomId
+
+    def roomSchedule(self, bot, update):
+        self.commonOperation(bot, update)
+        handler = RoomHandler(self._retrieveClosestRoom(update.message.text[1:]))
         bot.send_message(parse_mode='Markdown', chat_id=update.message.chat_id, text=handler.handleMessage())
 
     def now(self, bot, update):
@@ -88,3 +96,8 @@ class TelegramController:
         self.commonOperation(bot, update)
         handler = InfoHandler()
         bot.send_message(parse_mode='Markdown', chat_id=update.message.chat_id, text=handler.handleMessage())
+
+    def location(self, bot, update):
+        self.commonOperation(bot, update)
+        handler = RoomLocationHandler(self._retrieveClosestRoom(update.message.text[len("location") + 1:]))
+        bot.send_photo(chat_id=chat_id, photo=handler.handleMessage())
