@@ -3,3 +3,4 @@ requests==2.18.4
 lxml==4.1.1
 datetime==4.2
 pytz==2017.3
+slackclient==1.1.0
