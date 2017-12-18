@@ -22,7 +22,7 @@ class SlackController:
     RTM_READ_DELAY = 1 # 1 second delay between reading from RTM
     NOW_COMMAND = 'now'
     FREE_COMMAND = 'free'
-    MENTION_REGEX = "^<@(|[WU].+)>(.*)"
+    MENTION_REGEX = "<@(|[WU].+)>(.*)"
 
     def parse_bot_commands(slack_events):
         """
