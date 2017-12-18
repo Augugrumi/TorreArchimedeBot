@@ -6,6 +6,7 @@ import json
 import time
 import threading
 import logging
+import pytz
 
 class Results:
     def __init__(self, time = '', activity = '', professor = '', activityType = ''):
@@ -134,14 +135,24 @@ def nowSchedule():
 def nowFree():
     schedule = ''
     roomActivities = ''
+    nextActivities = []
     delimiter = '\t'
     scheduleAccess = ScheduleAccess()
     rooms = retrieve_rooms()
+    tz = pytz.timezone('Europe/Rome')
+    now = datetime.datetime.now(tz).time()
+    strnow = now.strftime('%H:%M')
     for room in rooms:
         schedule = scheduleAccess.getScheduleForRoom(room)
         roomScheduleNow = schedule.now()
         if (roomScheduleNow == ''):
             roomActivities += room
+            nextActivities = [k for k in schedule.schedule if k >= (strnow + '-' + strnow)]
+            roomActivities += ' until '
+            if (nextActivities != []):
+                roomActivities += str(min(nextActivities)).split('-')[0]
+            else:
+                roomActivities += 'tomorrow'
             roomActivities += '\n'
     if (roomActivities != ''):
         return roomActivities

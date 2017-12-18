@@ -105,3 +105,4 @@ bot-variables.env
 bot-variables.env.prod
 docker-compose.yml
 docker-compose.yml.prod
+ci_key
