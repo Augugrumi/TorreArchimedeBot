@@ -1,5 +1,9 @@
 # TorreArchimedeBot
 
+
+[![Waffle.io - Columns and their card count](https://badge.waffle.io/Augugrumi/TorreArchimedeBot.svg?columns=all)](https://waffle.io/Augugrumi/TorreArchimedeBot)
+
+
 A bot to see room booking at Torre Archimede, University of Padua.
 
 ## Docker container:
