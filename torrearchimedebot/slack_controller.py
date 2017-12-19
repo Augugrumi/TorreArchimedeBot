@@ -5,6 +5,7 @@ from slackclient import SlackClient
 from bot.handlers.room_handler_slack import SlackRoomHandler
 from bot.handlers.now_handler import NowHandler
 from bot.handlers.free_handler import FreeHandler
+from bot.handlers.info_handler import InfoHandler
 from bot.handlers.utility import *
 from bot.handlers.parsing import *
 
@@ -21,6 +22,7 @@ class SlackController:
     RTM_READ_DELAY = 1  # 1 second delay between reading from RTM
     NOW_COMMAND = 'now'
     FREE_COMMAND = 'free'
+    INFO_COMMAND = 'info'
     MENTION_REGEX = "<@(|[WU].+)>(.*)"
 
     def parse_bot_commands(slack_events):
@@ -64,6 +66,8 @@ class SlackController:
             handler = NowHandler()
         elif command.startswith(SlackController.FREE_COMMAND):
             handler = FreeHandler()
+        elif command.startswith(SlackController.INFO_COMMAND):
+            handler = InfoHandler()
         else:
             roomId = ''
             messageRoom = command.split(' ')[0]
