@@ -306,3 +306,48 @@ footer {
 .btn-xl {
   font-size: 11px;
   padding: 15px 45px; }
+
+.telegram-share{
+  position: relative;
+  display: inline-block;
+  height: 39px;
+  width: 139px;
+  padding: 1px 8px 1px 6px;
+  font-weight: 500;
+  color: #fff;
+  cursor: pointer;
+  background-color: #0088cc;
+  /*border-style: solid; */
+  border-color: black;
+  border-radius: 5px;
+  box-sizing: border-box;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.telegram-share span{
+  display: inline-block;
+  padding-top: 6px;
+}
+
+.telegram-share i{
+  display: inline-block;
+  height: 30px;
+  vertical-align: top;
+  width: 30px;
+  background-repeat: no-repeat;
+  background-position-y: 8px;
+  background-position-x: 5px;
+  background-size: 20px;
+  /* This image is included below :) */
+  background-image: url(https://telegram.wiki/_media/general/telegram-plane.png);
+}
+
+.telegram-share:hover{
+  background-color: #007dbb;
+}
+
+.telegram-share:active{
+  background-color: #026698;
+}
