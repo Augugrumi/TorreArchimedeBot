@@ -1,20 +1,20 @@
-from lxml import html
-from .utility import *
 import requests
-import sys
 import json
-import time
-import threading
+import html
+from lxml import html as htmllxml
+from .utility import *
 import logging
+import threading
 import pytz
 
+
 class Results:
-    def __init__(self, time = '', activity = '', professor = '', activityType = ''):
-        if (time != '') :
+    def __init__(self, time='', activity='', professor='', activityType=''):
+        if (time != ''):
             [timeStart, timeEnd] = time.split(' - ')
             self.timeStart = timeStart
             self.timeEnd = timeEnd
-        else :
+        else:
             self.timeStart = ''
             self.timeEnd = ''
         self.activity = activity
@@ -24,7 +24,6 @@ class Results:
     def __str__(self):
         return json.dumps(self, default=lambda o: o.__dict__, indent=4)
 
-
     def isEmpty(self):
         return (self.timeStart == '' and
                 self.timeEnd == '' and
@@ -32,15 +31,18 @@ class Results:
                 self.professor == '' and
                 self.activity == '')
 
-def  json2Schedule(jsonString):
+
+def json2Schedule(jsonString):
     data = json.loads(jsonString)
     schedule = data["schedule"]
     results = []
     for r in schedule:
         key = r
         r = r.replace("-", " - ")
-        results.append(Results(r, schedule[key][0], schedule[key][1], schedule[key][2]))
+        results.append(
+            Results(r, schedule[key][0], schedule[key][1], schedule[key][2]))
     return Schedule(data["room"], results)
+
 
 class Schedule:
     def __init__(self, room, records):
@@ -48,7 +50,6 @@ class Schedule:
         self.schedule = {}
         for res in records:
             if (not res.isEmpty()):
-                l = [None] * 3
                 l[0] = res.activity
                 l[1] = res.professor
                 l[2] = res.activityType
@@ -75,6 +76,7 @@ class Schedule:
     def __str__(self):
         return json.dumps(self, default=lambda o: o.__dict__, indent=4)
 
+
 class URLParser:
     URL_BASE = 'http://wss.math.unipd.it/display/Pages/'
     URL_EXT = '.php'
@@ -86,27 +88,34 @@ class URLParser:
     def parse(self, room):
         url = URLParser.URL_BASE + room + URLParser.URL_EXT
         f = requests.get(url)
-        tree = html.fromstring(f.text)
+        tree = htmllxml.fromstring(f.text)
         rows = tree.xpath(URLParser.XPATH_TO_TABLE_ROWS)
         records = []
         cells = ''
         for row in rows:
-            cells = [c for c in row.xpath(URLParser.XPATH_IF_NO_LESSONS) if c.strip()]
-            if (len(cells) == 0) :
-                cells = [c for c in row.xpath(URLParser.XPATH_TO_CELLS_CONTENT) if c.strip()]
-                cells += [c for c in row.xpath(URLParser.XPATH_TO_ACTIVITY_TYPE) if c.strip()]
-                if (len(cells)<=0):
-                    records.append(Results())
-                elif (len(cells)==3):
-                    records.append(Results(cells[0], cells[1], cells[2]))
-                elif (len(cells)==4):
-                    records.append(Results(cells[0], cells[1], cells[2], cells[3]))
-            else :
-                records.append(Results())
+            cells = [c for c in row.xpath(
+                URLParser.XPATH_IF_NO_LESSONS) if c.strip()]
+            res = Results()
+            if (len(cells) == 0):
+                cells = [c for c in row.xpath(
+                    URLParser.XPATH_TO_CELLS_CONTENT) if c.strip()]
+                cells += [c for c in row.xpath(
+                    URLParser.XPATH_TO_ACTIVITY_TYPE) if c.strip()]
+                if (len(cells) > 0):
+                    time = html.unescape(cells[0])
+                    activity = html.unescape(cells[1])
+                    professor = html.unescape(cells[2])
+                    if (len(cells) == 3):
+                        res = Results(time, activity, professor)
+                    elif (len(cells) == 4):
+                        activityType = html.unescape(cells[3])
+                        res = Results(time, activity, professor, activityType)
+            records.append(res)
         return records
 
     def parseSchedule(self, room):
         return Schedule(room, self.parse(room))
+
 
 def nowSchedule():
     schedule = ''
@@ -122,21 +131,21 @@ def nowSchedule():
             for s in roomScheduleNow:
                 toAdd = s
                 toAdd.replace('_', ' ') \
-                .replace('*', ' ') \
-                .replace('[', ' ') \
-                .replace(']', ' ') \
-                .replace('`', ' ')
+                    .replace('*', ' ') \
+                    .replace('[', ' ') \
+                    .replace(']', ' ') \
+                    .replace('`', ' ')
                 roomActivities += delimiter + toAdd
         else:
             roomActivities += delimiter + "The room is now free"
         roomActivities += '\n'
     return roomActivities
 
+
 def nowFree():
     schedule = ''
     roomActivities = ''
     nextActivities = []
-    delimiter = '\t'
     scheduleAccess = ScheduleAccess()
     rooms = retrieve_rooms()
     tz = pytz.timezone('Europe/Rome')
@@ -147,7 +156,8 @@ def nowFree():
         roomScheduleNow = schedule.now()
         if (roomScheduleNow == ''):
             roomActivities += room
-            nextActivities = [k for k in schedule.schedule if k >= (strnow + '-' + strnow)]
+            nextActivities = [
+                k for k in schedule.schedule if k >= (strnow + '-' + strnow)]
             roomActivities += ' until '
             if (nextActivities != []):
                 roomActivities += str(min(nextActivities)).split('-')[0]
@@ -158,6 +168,7 @@ def nowFree():
         return roomActivities
     else:
         return "No room is free"
+
 
 class ScheduleAccess:
     allSchedules = {}
@@ -172,6 +183,7 @@ class ScheduleAccess:
     def getScheduleForRoom(self, roomId):
         return ScheduleAccess.allSchedules[roomId]
 
+
 class ScheduleUpdater:
     def lookupFromServer():
         logging.getLogger().info('Taking data from server')
@@ -181,6 +193,7 @@ class ScheduleUpdater:
         for room in rooms:
             schedule = parser.parseSchedule(room)
             ScheduleAccess.allSchedules[room] = schedule
+
 
 def startUpdater():
     ScheduleUpdater.lookupFromServer()
