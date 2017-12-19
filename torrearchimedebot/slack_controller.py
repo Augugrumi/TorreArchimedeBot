@@ -2,7 +2,7 @@ import os
 import time
 import re
 from slackclient import SlackClient
-from bot.handlers.room_handler import RoomHandler
+from bot.handlers.room_handler_slack import SlackRoomHandler
 from bot.handlers.now_handler import NowHandler
 from bot.handlers.free_handler import FreeHandler
 from bot.handlers.utility import *
@@ -71,7 +71,7 @@ class SlackController:
                 if r.upper() == messageRoom.upper():
                     roomId = r
             if roomId != '':
-                handler = RoomHandler(roomId)
+                handler = SlackRoomHandler(roomId)
         if handler is not None:
             response = handler.handleMessage()
 
