@@ -184,4 +184,8 @@ class ScheduleUpdater:
 
 def startUpdater():
     ScheduleUpdater.lookupFromServer()
-    threading.Timer(3600, startUpdater).start()
+    if (time(20, 00) <= actual_time() <= time(23, 59)) or \
+        (time(2, 00) <= actual_time() <= time(5, 59)):
+        threading.Timer(14400, startUpdater).start()
+    else:
+        threading.Timer(3600, startUpdater).start()
