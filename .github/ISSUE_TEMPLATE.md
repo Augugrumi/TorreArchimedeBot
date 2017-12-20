@@ -1,5 +1,5 @@
-**This is (check only one)**:
-- [ ] Bug
+**This is a (check only one)**:
+- [ ] Bug report
 - [ ] Feature request
 
 **That affects**:
