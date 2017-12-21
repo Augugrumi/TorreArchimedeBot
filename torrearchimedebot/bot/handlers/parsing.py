@@ -50,6 +50,7 @@ class Schedule:
         self.schedule = {}
         for res in records:
             if (not res.isEmpty()):
+                l = [None] * 3
                 l[0] = res.activity
                 l[1] = res.professor
                 l[2] = res.activityType
