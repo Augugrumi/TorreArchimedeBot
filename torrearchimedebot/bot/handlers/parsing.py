@@ -65,6 +65,7 @@ class Schedule:
         self.schedule = {}
         for res in records:
             if (not res.isEmpty()):
+                l = [None] * 3
                 l[0] = res.activity
                 l[1] = res.professor
                 l[2] = res.activityType
@@ -212,4 +213,8 @@ class ScheduleUpdater:
 
 def startUpdater():
     ScheduleUpdater.lookupFromServer()
-    threading.Timer(3600, startUpdater).start()
+    if (time(20, 00) <= actual_time() <= time(23, 59)) or \
+        (time(2, 00) <= actual_time() <= time(5, 59)):
+        threading.Timer(14400, startUpdater).start()
+    else:
+        threading.Timer(3600, startUpdater).start()

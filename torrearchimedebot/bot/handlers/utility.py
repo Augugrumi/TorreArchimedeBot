@@ -15,21 +15,24 @@
 
 import datetime
 import pytz
-import os
+
 
 def time_in_range(interval):
     """Return true if the interval include actual time"""
     [start, end] = string_interval_to_time(interval)
-    tz = pytz.timezone('Europe/Rome')
-    now = datetime.datetime.now(tz).time()
-    return (start <= now <= end)
+    return (start <= actual_time() <= end)
+
 
 def before_now(interval):
     """Return true if the interval is ended before actual time"""
     [start, end] = string_interval_to_time(interval)
+    return actual_time() > end
+
+
+def actual_time():
     tz = pytz.timezone('Europe/Rome')
-    now = datetime.datetime.now(tz).time()
-    return now > end
+    return datetime.datetime.now(tz).time()
+
 
 def string_interval_to_time(interval):
     """Return 2 time retrieved from the string interval"""
@@ -39,6 +42,7 @@ def string_interval_to_time(interval):
     start = datetime.time(int(startHour), int(startMin), 0)
     end = datetime.time(int(endHour), int(endMin), 0)
     return [start, end]
+
 
 def retrieve_rooms():
     rooms = [
@@ -58,5 +62,5 @@ def retrieve_rooms():
         'LuF1',
         'LuM250',
         'P200'
-        ]
+    ]
     return rooms
