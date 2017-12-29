@@ -13,9 +13,10 @@
 # You should have received a copy of the GNU General Public License
 # along with TorreArchimedeBot.  If not, see <http://www.gnu.org/licenses/>.
 
-from bot.telegram_controller import TelegramController
 import logging
-from slack_controller import SlackController
+
+from bot.telegram_controller import TelegramController
+from bot.slack_controller import SlackController
 from multiprocessing import Process
 def main():
     """ Main entry point of the app """
