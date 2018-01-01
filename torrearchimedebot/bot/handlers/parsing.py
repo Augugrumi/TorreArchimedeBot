@@ -16,11 +16,13 @@
 import requests
 import json
 import html
-from lxml import html as htmllxml
-from .utility import *
 import logging
 import threading
 import pytz
+
+from lxml import html as htmllxml
+from .utility import *
+from datetime import time
 
 
 class Results:
