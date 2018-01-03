@@ -1,3 +1,3 @@
-**This pull request closes** #
+**This pull request** closes #
 
 **Short summary**:
