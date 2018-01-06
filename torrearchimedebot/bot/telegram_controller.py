@@ -58,7 +58,7 @@ class TelegramController:
             self._dispatcher.add_handler(handler)
 
     def commonOperation(self, bot, update):
-        logging.getLogger().info("Received message from " + \
+        logging.getLogger().info("TG - Received message from " + \
         str(update.message.chat_id) + " with text: " + update.message.text)
         bot.send_chat_action(chat_id=update.message.chat.id, action=ChatAction.TYPING)
 
@@ -67,7 +67,7 @@ class TelegramController:
 
     def start(self, bot, update):
         self.commonOperation(bot, update)
-        
+
         rooms = retrieve_rooms()
         keyboard = []
         for r in rooms:

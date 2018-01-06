@@ -14,8 +14,8 @@
 # along with TorreArchimedeBot.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import time
 import re
+import time as t
 from slackclient import SlackClient
 from bot.handlers.room_handler_slack import SlackRoomHandler
 from bot.handlers.now_handler import NowHandler
@@ -71,6 +71,9 @@ class SlackController:
         """
             Executes bot command if the command is known
         """
+
+        logging.getLogger().info("SLACK - Received message from " + \
+        channel + " with text: " + command)
         # Default response is help text for the user
         default_response = "Not sure what you mean."
 
@@ -103,7 +106,8 @@ class SlackController:
 
     def __init__(self):
         if SlackController.slack_client.rtm_connect(with_team_state=False):
-            print("Starter Bot connected and running!")
+            logging.getLogger().info("SLACK - Starter Bot connected and " + \
+            "running!")
             # Read bot's user ID by calling Web API method `auth.test`
             SlackController.starterbot_id = \
                 SlackController.slack_client.api_call("auth.test")["user_id"]
@@ -112,6 +116,7 @@ class SlackController:
                     SlackController.slack_client.rtm_read())
                 if command:
                     SlackController.handle_command(command, channel)
-                time.sleep(SlackController.RTM_READ_DELAY)
+                t.sleep(SlackController.RTM_READ_DELAY)
         else:
-            print("Connection failed. Exception traceback printed above.")
+            logging.getLogger().info("SLACK - Connection failed. Exception " + \
+            "traceback printed above.")
