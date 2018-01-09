@@ -22,7 +22,7 @@ class InfoHandler(AbsHandler):
         self.github = "https://github.com/Augugrumi/TorreArchimedeBot"
         self.url_donation = "http://paypal.me/DavidePolonio"
         self.author = "Augugrumi Team"
-        self.version = "0.3.5"
+        self.version = "0.3.6"
 
     def handleMessage(self):
 
