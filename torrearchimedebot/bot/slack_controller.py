@@ -112,11 +112,19 @@ class SlackController:
             SlackController.starterbot_id = \
                 SlackController.slack_client.api_call("auth.test")["user_id"]
             while True:
-                command, channel = SlackController.parse_bot_commands(
-                    SlackController.slack_client.rtm_read())
-                if command:
-                    SlackController.handle_command(command, channel)
-                t.sleep(SlackController.RTM_READ_DELAY)
+                try:
+                    command, channel = SlackController.parse_bot_commands(
+                        SlackController.slack_client.rtm_read())
+                    if command:
+                        SlackController.handle_command(command, channel)
+                    t.sleep(SlackController.RTM_READ_DELAY)
+                except WebSocketConnectionClosedException:
+                    logger.getLogger().error("Lost connection to Slack, reconnecting...")
+                    if not sc.rtm_connect():
+                        logger.getLogger().info("Failed to reconnect to Slack")
+                        time.sleep(SlackController.RTM_READ_DELAY)
+                    else:
+                        logger.getLogger().info("Reconnected to Slack")
         else:
             logging.getLogger().info("SLACK - Connection failed. Exception " + \
             "traceback printed above.")
