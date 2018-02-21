@@ -82,7 +82,7 @@ class TelegramController:
     def roomSchedule(self, bot, update):
         self.commonOperation(bot, update)
         roomId = ""
-        messageRoom = update.message.text[1:]
+        messageRoom = update.message.text[1:update.message.text.find('@TorreArchimedeBot')]
         for r in retrieve_rooms():
             if r.upper() == messageRoom.upper():
                 roomId = r
