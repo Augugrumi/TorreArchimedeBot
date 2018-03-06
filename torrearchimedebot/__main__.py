@@ -20,7 +20,7 @@ Module Docstring
 """
 
 __author__ = "Augugrumi Team"
-__version__ = "0.3.7"
+__version__ = "0.3.8"
 __license__ = "GPL3"
 
 

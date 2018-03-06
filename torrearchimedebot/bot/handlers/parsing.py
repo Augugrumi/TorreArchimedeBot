@@ -182,6 +182,17 @@ def nowFree():
             else:
                 roomActivities += 'tomorrow'
             roomActivities += '\n'
+        elif any(x in roomScheduleNow for x in ["da confermare", 
+            "Aula riservata al Dip.to Matematica"]):
+            roomActivities += ("⚠ Possible empty: " + room)
+            nextActivities = [
+                k for k in schedule.schedule if k >= (strnow + '-' + strnow)]
+            roomActivities += ' until '
+            if (nextActivities != []):
+                roomActivities += str(min(nextActivities)).split('-')[0]
+            else:
+                roomActivities += 'tomorrow ⚠'
+            roomActivities += '\n'
     if (roomActivities != ''):
         return roomActivities
     else:
