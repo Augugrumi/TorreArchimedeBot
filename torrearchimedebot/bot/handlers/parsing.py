@@ -184,7 +184,7 @@ def nowFree():
             roomActivities += '\n'
         elif any(x in roomScheduleNow for x in ["da confermare", 
             "Aula riservata al Dip.to Matematica"]):
-            roomActivities += ("⚠ Possible empty:" + room)
+            roomActivities += ("⚠ Possible empty: " + room)
             nextActivities = [
                 k for k in schedule.schedule if k >= (strnow + '-' + strnow)]
             roomActivities += ' until '
