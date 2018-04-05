@@ -21,6 +21,7 @@ from bot.handlers.start_handler import StartHandler
 from bot.handlers.room_handler import RoomHandler
 from bot.handlers.now_handler import NowHandler
 from bot.handlers.free_handler import FreeHandler
+from bot.handlers.free_from_handler import FreeFromHandler
 from bot.handlers.info_handler import InfoHandler
 from bot.handlers.utility import *
 from bot.handlers.parsing import startUpdater
@@ -46,6 +47,10 @@ class TelegramController:
         #Free rooms Handler
         freeHandler = CommandHandler('free', self.free)
         self._dispatcher.add_handler(freeHandler)
+
+        #Free from a certain time Handler
+        freeFromHandler = CommandHandler('freefrom', self.freefrom)
+        self._dispatcher.add_handler(freeFromHandler)
 
         #Info handler
         infoHandler = CommandHandler('info', self.info)
@@ -97,6 +102,11 @@ class TelegramController:
     def free(self, bot, update):
         self.commonOperation(bot, update)
         handler = FreeHandler()
+        bot.send_message(chat_id=update.message.chat_id, text=handler.handleMessage())
+
+    def freefrom(self, bot, update):
+        self.commonOperation(bot, update)
+        handler = FreeFromHandler(update.message.text)
         bot.send_message(chat_id=update.message.chat_id, text=handler.handleMessage())
 
     def info(self, bot, update):

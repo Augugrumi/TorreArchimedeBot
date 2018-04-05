@@ -91,6 +91,19 @@ class Schedule:
             toReturn = [t] + toReturn
         return toReturn
 
+    def scheduleAt(self, time_to_check):
+        toReturn = ''
+        t = ''
+        for time in self.schedule:
+            print(time)
+            if (time_in_range(time, time_to_check)):
+                print("si")
+                toReturn = self.schedule[time]
+                t = time
+        if (toReturn != ''):
+            toReturn = [t] + toReturn
+        return toReturn
+
     def __str__(self):
         return json.dumps(self, default=lambda o: o.__dict__, indent=4)
 
@@ -160,6 +173,43 @@ def nowSchedule():
     return roomActivities
 
 
+def freeFrom(hour_min):
+    schedule = ''
+    roomActivities = ''
+    nextActivities = []
+    scheduleAccess = ScheduleAccess()
+    rooms = retrieve_rooms()
+    strnow = hour_min.strftime('%H:%M')
+    for room in rooms:
+        schedule = scheduleAccess.getScheduleForRoom(room)
+        roomScheduleNow = schedule.scheduleAt(hour_min)
+        if (roomScheduleNow == ''):
+            roomActivities += room
+            nextActivities = [
+                k for k in schedule.schedule if k >= (strnow + '-' + strnow)]
+            roomActivities += ' until '
+            if (nextActivities != []):
+                roomActivities += str(min(nextActivities)).split('-')[0]
+            else:
+                roomActivities += 'tomorrow'
+            roomActivities += '\n'
+        elif any(x in roomScheduleNow for x in ["da confermare",
+                                                "Aula riservata al Dip.to Matematica"]):
+            roomActivities += ("⚠ Possible empty: " + room)
+            nextActivities = [
+                k for k in schedule.schedule if k >= (strnow + '-' + strnow)]
+            roomActivities += ' until '
+            if (nextActivities != []):
+                roomActivities += str(min(nextActivities)).split('-')[0]
+            else:
+                roomActivities += 'tomorrow ⚠'
+            roomActivities += '\n'
+    if (roomActivities != ''):
+        return roomActivities
+    else:
+        return "No room is free"
+
+
 def nowFree():
     schedule = ''
     roomActivities = ''
@@ -182,8 +232,8 @@ def nowFree():
             else:
                 roomActivities += 'tomorrow'
             roomActivities += '\n'
-        elif any(x in roomScheduleNow for x in ["da confermare", 
-            "Aula riservata al Dip.to Matematica"]):
+        elif any(x in roomScheduleNow for x in ["da confermare",
+                                                "Aula riservata al Dip.to Matematica"]):
             roomActivities += ("⚠ Possible empty: " + room)
             nextActivities = [
                 k for k in schedule.schedule if k >= (strnow + '-' + strnow)]
@@ -227,7 +277,7 @@ class ScheduleUpdater:
 def startUpdater():
     ScheduleUpdater.lookupFromServer()
     if (time(20, 00) <= actual_time() <= time(23, 59)) or \
-        (time(2, 00) <= actual_time() <= time(5, 59)):
+            (time(2, 00) <= actual_time() <= time(5, 59)):
         threading.Timer(14400, startUpdater).start()
     else:
         threading.Timer(3600, startUpdater).start()
