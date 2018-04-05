@@ -173,16 +173,15 @@ def nowSchedule():
     return roomActivities
 
 
-def freeFrom(hour_min):
+def free_room_parser(strnow = "", hour_min = None):
     schedule = ''
     roomActivities = ''
     nextActivities = []
     scheduleAccess = ScheduleAccess()
     rooms = retrieve_rooms()
-    strnow = hour_min.strftime('%H:%M')
     for room in rooms:
         schedule = scheduleAccess.getScheduleForRoom(room)
-        roomScheduleNow = schedule.scheduleAt(hour_min)
+        roomScheduleNow = schedule.scheduleAt(hour_min) if hour_min else schedule.now()
         if (roomScheduleNow == ''):
             roomActivities += room
             nextActivities = [
@@ -208,45 +207,18 @@ def freeFrom(hour_min):
         return roomActivities
     else:
         return "No room is free"
+
+
+def freeFrom(hour_min):
+    strnow = hour_min.strftime('%H:%M')
+    return free_room_parser(strnow, hour_min)
 
 
 def nowFree():
-    schedule = ''
-    roomActivities = ''
-    nextActivities = []
-    scheduleAccess = ScheduleAccess()
-    rooms = retrieve_rooms()
     tz = pytz.timezone('Europe/Rome')
     now = datetime.datetime.now(tz).time()
     strnow = now.strftime('%H:%M')
-    for room in rooms:
-        schedule = scheduleAccess.getScheduleForRoom(room)
-        roomScheduleNow = schedule.now()
-        if (roomScheduleNow == ''):
-            roomActivities += room
-            nextActivities = [
-                k for k in schedule.schedule if k >= (strnow + '-' + strnow)]
-            roomActivities += ' until '
-            if (nextActivities != []):
-                roomActivities += str(min(nextActivities)).split('-')[0]
-            else:
-                roomActivities += 'tomorrow'
-            roomActivities += '\n'
-        elif any(x in roomScheduleNow for x in ["da confermare",
-                                                "Aula riservata al Dip.to Matematica"]):
-            roomActivities += ("⚠ Possible empty: " + room)
-            nextActivities = [
-                k for k in schedule.schedule if k >= (strnow + '-' + strnow)]
-            roomActivities += ' until '
-            if (nextActivities != []):
-                roomActivities += str(min(nextActivities)).split('-')[0]
-            else:
-                roomActivities += 'tomorrow ⚠'
-            roomActivities += '\n'
-    if (roomActivities != ''):
-        return roomActivities
-    else:
-        return "No room is free"
+    return free_room_parser(strnow)
 
 
 class ScheduleAccess:
