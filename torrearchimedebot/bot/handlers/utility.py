@@ -15,23 +15,25 @@
 
 import datetime
 import pytz
+import re
+from datetime import time
 
 
-def time_in_range(interval):
+def actual_time():
+    tz = pytz.timezone('Europe/Rome')
+    return datetime.datetime.now(tz).time()
+
+
+def time_in_range(interval='12:00-12:00', time_to_check=actual_time()):
     """Return true if the interval include actual time"""
     [start, end] = string_interval_to_time(interval)
-    return (start <= actual_time() <= end)
+    return (start <= time_to_check <= end)
 
 
 def before_now(interval):
     """Return true if the interval is ended before actual time"""
     [start, end] = string_interval_to_time(interval)
     return actual_time() > end
-
-
-def actual_time():
-    tz = pytz.timezone('Europe/Rome')
-    return datetime.datetime.now(tz).time()
 
 
 def string_interval_to_time(interval):
@@ -64,3 +66,26 @@ def retrieve_rooms():
         'P200'
     ]
     return rooms
+
+
+def parse_freefrom_time(string_time):
+    lst = re.findall(r"[\w']+", string_time)
+    if not lst:
+        return "Time not valid"
+    hour = lst[0]
+    minutes = lst[1] if len(lst) > 1 else "00"
+    if len(hour) >= 4:
+        tmp = hour
+        hour = tmp[0:2]
+        minutes = tmp[2:4]
+
+    try:
+        hour = int(hour)
+        minutes = int(minutes)
+    except Exception:
+        return "Time not valid"
+    print(str(hour) + ":" + str(minutes))
+    if not (0 <= hour <= 23 and 0 <= minutes <= 59):
+        return "Time not valid"
+    hour_min = time(hour, minutes)
+    return hour_min

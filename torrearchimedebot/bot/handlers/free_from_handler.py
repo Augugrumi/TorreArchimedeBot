@@ -14,21 +14,20 @@
 # along with TorreArchimedeBot.  If not, see <http://www.gnu.org/licenses/>.
 
 from .abs_handler import AbsHandler
+from .parsing import *
+from .utility import *
 
 
-class InfoHandler(AbsHandler):
+class FreeFromHandler(AbsHandler):
 
-    def __init__(self):
-        self.github = "https://github.com/Augugrumi/TorreArchimedeBot"
-        self.url_donation = "http://paypal.me/DavidePolonio"
-        self.author = "Augugrumi Team"
-        self.version = "0.3.9"
+    def __init__(self, message):
+        self._message = message
 
     def handleMessage(self):
-
-        return "*Torre Archimede Bot*, version `" + self.version + \
-            "`.\n_Brought to you with ❤️ by " + self.author + "_.\n" + \
-            "Do you want to contribute or report an issue? You can find us" + \
-            " at: " + self.github + "!\n\nEveryone knows that programmers " + \
-            "are machines able to transform coffee into code. Please " + \
-            "help us buying some! \n" + self.url_donation
+        # "\freefrom " is 10 characters
+        string_time = parse_freefrom_time(self._message[10:])
+        if not type(string_time) is datetime.time:
+            return string_time
+        response = freeFrom(string_time)
+        return "Rooms that are free from " + string_time.strftime('%H:%M') \
+               + " are:\n" + response

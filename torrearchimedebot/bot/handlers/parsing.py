@@ -91,6 +91,19 @@ class Schedule:
             toReturn = [t] + toReturn
         return toReturn
 
+    def scheduleAt(self, time_to_check):
+        toReturn = ''
+        t = ''
+        for time in self.schedule:
+            print(time)
+            if (time_in_range(time, time_to_check)):
+                print("si")
+                toReturn = self.schedule[time]
+                t = time
+        if (toReturn != ''):
+            toReturn = [t] + toReturn
+        return toReturn
+
     def __str__(self):
         return json.dumps(self, default=lambda o: o.__dict__, indent=4)
 
@@ -160,18 +173,15 @@ def nowSchedule():
     return roomActivities
 
 
-def nowFree():
+def free_room_parser(strnow = "", hour_min = None):
     schedule = ''
     roomActivities = ''
     nextActivities = []
     scheduleAccess = ScheduleAccess()
     rooms = retrieve_rooms()
-    tz = pytz.timezone('Europe/Rome')
-    now = datetime.datetime.now(tz).time()
-    strnow = now.strftime('%H:%M')
     for room in rooms:
         schedule = scheduleAccess.getScheduleForRoom(room)
-        roomScheduleNow = schedule.now()
+        roomScheduleNow = schedule.scheduleAt(hour_min) if hour_min else schedule.now()
         if (roomScheduleNow == ''):
             roomActivities += room
             nextActivities = [
@@ -182,8 +192,8 @@ def nowFree():
             else:
                 roomActivities += 'tomorrow'
             roomActivities += '\n'
-        elif any(x in roomScheduleNow for x in ["da confermare", 
-            "Aula riservata al Dip.to Matematica"]):
+        elif any(x in roomScheduleNow for x in ["da confermare",
+                                                "Aula riservata al Dip.to Matematica"]):
             roomActivities += ("⚠ Possible empty: " + room)
             nextActivities = [
                 k for k in schedule.schedule if k >= (strnow + '-' + strnow)]
@@ -197,6 +207,18 @@ def nowFree():
         return roomActivities
     else:
         return "No room is free"
+
+
+def freeFrom(hour_min):
+    strnow = hour_min.strftime('%H:%M')
+    return free_room_parser(strnow, hour_min)
+
+
+def nowFree():
+    tz = pytz.timezone('Europe/Rome')
+    now = datetime.datetime.now(tz).time()
+    strnow = now.strftime('%H:%M')
+    return free_room_parser(strnow)
 
 
 class ScheduleAccess:
@@ -227,7 +249,7 @@ class ScheduleUpdater:
 def startUpdater():
     ScheduleUpdater.lookupFromServer()
     if (time(20, 00) <= actual_time() <= time(23, 59)) or \
-        (time(2, 00) <= actual_time() <= time(5, 59)):
+            (time(2, 00) <= actual_time() <= time(5, 59)):
         threading.Timer(14400, startUpdater).start()
     else:
         threading.Timer(3600, startUpdater).start()
